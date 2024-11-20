@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="row mt-5">
+        <div class="col-8 offset-2">
+            <h1>로그인</h1>
+
+            <div th:if="${param.error}">
+                <h1>
+                    email 또는 비밀번호를 확인해주세요
+                </h1>
+            </div>
+
+            <script th:inline="javascript">
+                let errorMsg = [[${param.erroe}]]
+                if(errorMsg) {
+                    alert("이메일 또는 비밀번호를 확인해주세요")
+                }
+            </script>
+
+            <form class="row g-3 formA" action="/members/login" method="post">
+
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="이메일을 입력해주세요 ex) test@naver.com" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요" required>
+                </div>
+
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary formbtn">로그인</button>
+                    <button type="submit" class="btn btn-primary">회원가입</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+</th:block>
+
+
+
+</body>
+</html>

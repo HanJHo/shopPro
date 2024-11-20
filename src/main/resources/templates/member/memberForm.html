@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="row mt-5">
+        <div class="col-8 offset-2">
+            <h1>회원가입</h1>
+
+            <form class="row g-3 formA" action="/members/new" method="post" th:object="${memberDTO}">
+
+                <div class="col-12">
+                    <label for="name" class="form-label">이름</label>
+                    <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="이름을 입력해주세요">
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="fieldError"></p>
+                    <span class="name"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="이메일을 입력해주세요 ex) test@naver.com" required>
+                    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="fieldError"></p>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="비밀번호를 입력해주세요" required>
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="fieldError"></p>
+                </div>
+
+                <div class="col-12">
+                    <label for="addr" class="form-label">Address</label>
+                    <input type="text" th:field="*{address}" class="form-control" id="addr" placeholder="주소를 입력해주세요">
+                </div>
+
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                        <label class="form-check-label" for="gridCheck">
+                            Check me out
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary formbtn">Sign in</button>
+                    <button type="submit" class="btn btn-primary">로그인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let msg = [[${msg}]]
+        if(msg){
+            alert(msg)
+        }
+
+        $("form").on("submit", function (e) {
+
+            if(!nameValid()) {
+                return false
+            }
+        })
+        // $(".formbtn").on("click", function (e) {
+        //     e.preventDefault()
+        //     if(!nameValid()) {
+        //
+        //     } else {
+        //         $("form").submit()
+        //     }
+        // })
+
+        function nameValid(e) {
+
+            let nameValue = $("#name").val();   // 함수를 실행했을 때 이름을 가져온다.
+            if(nameValue.length < 2 || nameValue.length > 10){
+                alert("이름은 2~10글자 사이여야 합니다")
+                $(".name").text("이름은 2~10글자 사이여야 합니다")
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+    </script>
+
+</th:block>
+
+<th:block layout:fragment="script">
+
+</th:block>
+
+</body>
+</html>
