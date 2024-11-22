@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>아이템 등록</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <form action="/admin/item/new" method="post" th:object="${itemDTO}" enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="itemNm" class="form-label">상품명</label>
+                            <input type="text" class="form-control" th:field="*{itemNm}"  required id="itemNm" readonly>
+                            <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError"></p>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="price" class="form-label">가격</label>
+                            <input type="number" min="0" class="form-control" th:field="*{price}" id="price" readonly>
+                            <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError"></p>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="stockNumber"  class="form-label">재고 수량</label>
+                            <input type="number" min="0" class="form-control" th:field="*{stockNumber}" id="stockNumber" readonly>
+                            <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError"></p>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="itemDetail" class="form-label">상세설명 </label>
+                            <textarea class="form-control" th:field="*{itemDetail}" id="itemDetail" rows="3" readonly></textarea>
+                            <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError"></p>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="itemSellStatus" class="form-label">상품 판매 상태 </label>
+                            <input  th:field="*{itemSellStatus}" id="itemSellStatus" class="form-control"  readonly>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3 imgA">
+
+                            <div class="row">
+                                <th:block th:each="img: ${itemDTO.itemImgDTOList}">
+                                    <th:block th:if="${img.repimgYn == 'Y'}">
+                                        <div class="col-12">
+                                            대표이미지
+                                            <img width="100%" th:src="${img.imgUrl}">
+                                        </div>
+
+                                    </th:block>
+
+                                    <th:block th:unless="${img.repimgYn == 'Y'}">
+                                        <div class="col">
+                                            <img width="100%" th:src="${img.imgUrl}">
+                                        </div>
+                                    </th:block>
+                            </div>
+</th:block>
+
+</div>
+</div>
+
+<div class="col-12">
+    <button type="button" class="btn btn-dark">수정</button>
+    <button type="button">목록</button>
+</div>
+</div>
+
+</div>
+</div>
+</form>
+
+
+</th:block>
+
+<th:block layout:fragment="script">
+
+    <script>
+        $(document).ready(function () {
+
+            $("form").on("submit", function (e) {
+                if(itemNmValid()){
+                    return false
+                }
+                if($(".imgInput").first().val()  == ""){
+                    //  $(".mainimg").val()==""
+                    //대표이미지가 없을경우
+                    alert("대표이미지를 넣어주세요")
+
+                    return false
+                }
+
+
+
+            })
+            function itemNmValid() {
+                let itemNmVal = $("#itemNm").val()
+                if(itemNmVal.length < 2 || itemNmVal.length > 50){
+                    alert("이름을 입력해주세요")
+                    alert($(".imgInput").first().val())
+                    return true
+                }
+            }
+
+            $(".addimg").on("click", function () {
+                let str = '<input class="form-control imgInput" name="multipartFile" type="file" >'
+                $(".imgA").append(str)
+
+
+            })
+
+            bindDomEvent()
+            //이미지 파일 유효성 검사
+            function bindDomEvent() {
+                $(".imgA").on("change", "input", function () {
+                    let fileName = $(this).val().split("\\").pop() //이미지 파일명
+                    //이미지파일명의 확장자를 추출해서 확인하다.
+                    //dog.jpg
+
+                    let fileExt = fileName.substring(fileName.lastIndexOf(".") +1 )
+                    //확장자 소문자로 변환
+
+                    fileExt = fileExt.toLowerCase()
+
+                    if(fileExt != "jpg" && fileExt != "jpeg" &&
+                        fileExt != "gif" && fileExt != "png" && fileExt != "bmp"){
+
+                        $(this).val("")
+                        alert("이미지 파일만 넣어주세요")
+                        return false;
+                    }
+
+                })
+            }
+
+
+
+
+        })
+
+    </script>
+
+</th:block>
+
+</body>
+</html>
